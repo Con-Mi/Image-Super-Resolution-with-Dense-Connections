@@ -56,14 +56,13 @@ class DIV2KDataset(Dataset):
 
 file_list = pd.read_csv("train_data_index.csv")
 data_transforms = transforms.Compose([transforms.ToTensor()])
-data_set = DIV2KDataset(file_list, transform = data_transforms)
-image1, label1 = data_set[1]
-image0, label0 = data_set[0]
-#print(label0.size())
+# data_set = DIV2KDataset(file_list, transform = data_transforms)
 
-def DIV2KData():
+#print(data_set)
+
+def DIV2KData(**kwargs):
 	data_set = DIV2KDataset(file_list, transform = data_transforms)
-	dataloader = DataLoader(data_set, batch_size = 1, shuffle = True, num_workers = 6)
+	return data_set
 
 """
 for i, sample in enumerate(dataloader):

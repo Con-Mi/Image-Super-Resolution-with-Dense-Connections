@@ -7,11 +7,11 @@ from collections import OrderedDict
 class _DenseLayer(nn.Module):
 	def __init__(self, num_input_features, growth_rate, drop_rate):
 		super(_DenseLayer, self).__init__()
-		self.add_module('g_norm1', nn.GroupNorm(num_gourps = num_input_features // 2, num_channels = num_input_features)), 
+		self.add_module('g_norm1', nn.GroupNorm(num_groups = num_input_features // 2, num_channels = num_input_features)), 
 		self.add_module('leaky_relu1', nn.LeakyReLU(inplace = True)),
-		self.add_module('conv1', nn.Conv2d(in_channels = num_input_features, out_channels = bn_size * growth_rate, kernel_size = 1, stride = 1, bias = False)),
-		self.add_module('g_norm2', nn.GroupNorm(num_gourps = bn_size * growth_rate // 2, num_channels = bn_size * growth_rate)),
-		self.add_module('conv2', nn.Conv2d(in_channels = bn_size * growth_rate, out_channels = growth_rate, kernel_size = 3, stride = 1, padding = 1, bias = False)),
+		self.add_module('conv1', nn.Conv2d(in_channels = num_input_features, out_channels = 2 * growth_rate, kernel_size = 1, stride = 1, bias = False)),
+		self.add_module('g_norm2', nn.GroupNorm(num_groups = 2 * growth_rate // 2, num_channels = 2 * growth_rate)),
+		self.add_module('conv2', nn.Conv2d(in_channels = 2 * growth_rate, out_channels = 4 * growth_rate, kernel_size = 3, stride = 1, padding = 1, bias = False)),
 		self.drop_rate = drop_rate
 
 	def forward(self, x):
@@ -20,14 +20,15 @@ class _DenseLayer(nn.Module):
 			new_features = F.dropout(new_features, p = self.drop_rate, training = self.training)
 		return torch.cat([x, new_features], 1)
 
-class _DenseBLock(nn.Module):
+class _DenseBlock(nn.Module):
 	def __init__(self, num_layers, num_input_features, growth_rate, drop_rate):
-		super(_DenseBLock, self).__init__()
+		super(_DenseBlock, self).__init__()
 		for i in range(num_layers):
 			layer = _DenseLayer(num_input_features + i * growth_rate, growth_rate, drop_rate)
 			self.add_module('denselayer%d' % (i+1), layer)
 
 """
+======= No Transition Layer =======
 class _TransitionLayer(nn.Module):
 	def __init__(self, num_input_features, num_output_features):
 		super(_TransitionLayer, self).__init__()
@@ -72,7 +73,7 @@ class SRDenseNetwork(nn.Module):
 		# Dense Blocks
 		num_features = num_init_features
 		for i, num_layers in enumerate(block_config):
-			block = _DenseBlock(num_layers = num_layers, num_input_fetaures = num_features, growth_rate = growth_rate, drop_rate = drop_rate)
+			block = _DenseBlock(num_layers = num_layers, num_input_features = num_features, growth_rate = growth_rate, drop_rate = drop_rate)
 			self.features.add_module('denseblock%d' % (i+1), block)
 			num_features = num_features + num_layers * growth_rate
 		
