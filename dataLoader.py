@@ -31,24 +31,24 @@ class DIV2KDataset(Dataset):
 		file_id = self.file_list_idx.iloc[index]
 
 		if self.mode is "train":
-			image_folder = os.path.join(self.data_dir, "X4")
-			label_folder = os.path.join(self.label_dir, "X2")
-			image_path = os.path.join(image_folder, str("%04d" % file_id) + "x4" + ".png")
-			label_path = os.path.join(self.label_folder, str("%04d" % file_id) + "x2" + ".png")
-			image = Image.open(image_path)
-			label = Image.open(label_path)
+			self.image_folder = os.path.join(self.data_dir, "X4")
+			self.label_folder = os.path.join(self.label_dir, "X2")
+			self.image_path = os.path.join(self.image_folder, str("%04d" % file_id) + "x4" + ".png")
+			self.label_path = os.path.join(self.label_folder, str("%04d" % file_id) + "x2" + ".png")
+			image = Image.open(self.image_path)
+			label = Image.open(self.label_path)
 			if self.transform is not None:
 				image = self.transform(image)
 				label = self.transform(label)
 			return image,label
 
 		elif self.mode is "validation":
-			image_folder = os.path.join(self.data_dir, "X4")
-			image_path = os.path.join(image_folder, str("%04d" % file_id) + "x4" + ".png") # Need to get images in the {0001, 0010, ..} format
-			label_folder = os.path.join(self.label_dir, "X2")
-			label_path = os.path.join(self.label_folder, str("%04d" % file_id) + "x2" + ".png")
-			image = Image.open(image_path)
-			label = Image.open(label_path)
+			self.image_folder = os.path.join(self.data_dir, "X4")
+			self.image_path = os.path.join(self.image_folder, str("%04d" % file_id) + "x4" + ".png") # Need to get images in the {0001, 0010, ..} format
+			self.label_folder = os.path.join(self.label_dir, "X2")
+			self.label_path = os.path.join(self.label_folder, str("%04d" % file_id) + "x2" + ".png")
+			image = Image.open(self.image_path)
+			label = Image.open(self.label_path)
 			if self.transform is not None:
 				image = self.transform(image)
 				label = self.transform(label)
@@ -60,14 +60,11 @@ data_transforms = transforms.Compose([transforms.ToTensor()])
 
 #print(data_set)
 
-def DIV2KData(**kwargs):
+def DIV2K_TrainData(**kwargs):
 	data_set = DIV2KDataset(file_list, transform = data_transforms)
 	return data_set
 
-"""
-for i, sample in enumerate(dataloader):
-	image2, label2 = sample
-	print(image2.size())
-	print(label2.size())
-	print(i)
-"""
+def DIV2K_ValidData(**kwargs):
+	data_set = DIV2KDataset(file_list, transform = data_transforms, mode = "validation")
+	return data_set
+
