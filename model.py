@@ -20,7 +20,7 @@ class _DenseLayer(nn.Module):
 			new_features = F.dropout(new_features, p = self.drop_rate, training = self.training)
 		return torch.cat([x, new_features], 1)
 
-class _DenseBlock(nn.Module):
+class _DenseBlock(nn.Sequential):
 	def __init__(self, num_layers, num_input_features, growth_rate, drop_rate):
 		super(_DenseBlock, self).__init__()
 		for i in range(num_layers):
@@ -29,7 +29,7 @@ class _DenseBlock(nn.Module):
 
 """
 ======= No Transition Layer =======
-class _TransitionLayer(nn.Module):
+class _TransitionLayer(nn.Sequential):
 	def __init__(self, num_input_features, num_output_features):
 		super(_TransitionLayer, self).__init__()
 		self.add_module('g_norm', nn.GroupNorm(num_groups = num_input_features // 2, num_channels = num_input_features))
