@@ -80,7 +80,7 @@ class SRDenseNetwork(nn.Module):
 		
 		# Final Normalization and Channel Bottleneck
 		self.features.add_module('g_norm_f', nn.GroupNorm(num_groups = num_features // (growth_rate * bot_neck), num_channels = num_features))
-		self.features.add_module('conv_bottleneck', nn.Conv2d(in_channels = num_features, out_channel = upscale_factor**2, kernel_size = 1, stride = 1, bias = False))
+		self.features.add_module('conv_bottleneck', nn.Conv2d(in_channels = num_features, out_channels = upscale_factor**2, kernel_size = 1, stride = 1, bias = False))
 
 		# Upsample
 		self.upsample_sr = nn.PixelShuffle(upscale_factor)
