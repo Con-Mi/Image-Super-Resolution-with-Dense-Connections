@@ -1,17 +1,18 @@
 """ ============== Super Resolution Dense Network ============ """
-
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from collections import OrderedDict
 
-class _DenseLayer(nn.Module):
-	def __init__(self, num_input_features, growth_rate, drop_rate):
+class _DenseLayer(nn.Sequential):
+	def __init__(self, num_input_features, growth_rate, bot_neck, drop_rate):
 		super(_DenseLayer, self).__init__()
 		self.add_module('g_norm1', nn.GroupNorm(num_groups = num_input_features // 2, num_channels = num_input_features)), 
 		self.add_module('leaky_relu1', nn.LeakyReLU(inplace = True)),
-		self.add_module('conv1', nn.Conv2d(in_channels = num_input_features, out_channels = 2 * growth_rate, kernel_size = 1, stride = 1, bias = False)),
-		self.add_module('g_norm2', nn.GroupNorm(num_groups = 2 * growth_rate // 2, num_channels = 2 * growth_rate)),
-		self.add_module('conv2', nn.Conv2d(in_channels = 2 * growth_rate, out_channels = 4 * growth_rate, kernel_size = 3, stride = 1, padding = 1, bias = False)),
+		self.add_module('conv1', nn.Conv2d(in_channels = num_input_features, out_channels = bot_neck * growth_rate, kernel_size = 1, stride = 1, bias = False)),
+		self.add_module('g_norm2', nn.GroupNorm(num_groups = (bot_neck * growth_rate) // 2, num_channels = bot_neck * growth_rate)),
+		self.add_module('leaky_relu2', nn.LeakyReLU(inplace = True)),
+		self.add_module('conv2', nn.Conv2d(in_channels = bot_neck * growth_rate, out_channels = growth_rate, kernel_size = 3, stride = 1, padding = 1, bias = False)),
 		self.drop_rate = drop_rate
 
 	def forward(self, x):
@@ -21,10 +22,10 @@ class _DenseLayer(nn.Module):
 		return torch.cat([x, new_features], 1)
 
 class _DenseBlock(nn.Sequential):
-	def __init__(self, num_layers, num_input_features, growth_rate, drop_rate):
+	def __init__(self, num_layers, num_input_features, growth_rate, bot_neck, drop_rate):
 		super(_DenseBlock, self).__init__()
 		for i in range(num_layers):
-			layer = _DenseLayer(num_input_features + i * growth_rate, growth_rate, drop_rate)
+			layer = _DenseLayer(num_input_features + i * growth_rate, growth_rate, bot_neck, drop_rate)
 			self.add_module('denselayer%d' % (i+1), layer)
 
 """
@@ -59,7 +60,7 @@ class _UpsampleBlock(nn.Module):
 		return self.block(x)
 
 class SRDenseNetwork(nn.Module):
-	def __init__(self, growth_rate = 32, block_config = (6, 12, 24, 16), num_init_features = 64, drop_rate = 0, upscale_factor = 2):
+	def __init__(self, growth_rate = 32, block_config = (6, 12, 24, 16), num_init_features = 64, bot_neck = 4, drop_rate = 0, upscale_factor = 2):
 		super(SRDenseNetwork, self).__init__()
 
 		# First Convolution
@@ -73,7 +74,7 @@ class SRDenseNetwork(nn.Module):
 		# Dense Blocks
 		num_features = num_init_features
 		for i, num_layers in enumerate(block_config):
-			block = _DenseBlock(num_layers = num_layers, num_input_features = num_features, growth_rate = growth_rate, drop_rate = drop_rate)
+			block = _DenseBlock(num_layers = num_layers, num_input_features = num_features, growth_rate = growth_rate, bot_neck = bot_neck, drop_rate = drop_rate)
 			self.features.add_module('denseblock%d' % (i+1), block)
 			num_features = num_features + num_layers * growth_rate
 		
@@ -91,6 +92,6 @@ class SRDenseNetwork(nn.Module):
 
 def densenetSR(**kwargs):
 	
-	model = SRDenseNetwork(growth_rate = 32, block_config = (3, 6, 12, 8), num_init_features = 64, drop_rate = 0, upscale_factor = 2)
+	model = SRDenseNetwork(growth_rate = 32, block_config = (3, 6, 12, 8), num_init_features = 64, bot_neck = 4, drop_rate = 0, upscale_factor = 2)
 
 	return model
