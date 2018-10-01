@@ -7,10 +7,10 @@ from collections import OrderedDict
 class _DenseLayer(nn.Sequential):
 	def __init__(self, num_input_features, growth_rate, bot_neck, drop_rate):
 		super(_DenseLayer, self).__init__()
-        self.add_module('norm1', nn.BatchNorm2d(num_features = num_init_features), 
+        self.add_module('norm1', nn.BatchNorm2d(num_features = num_init_features)), 
 		self.add_module('leaky_relu1', nn.LeakyReLU(inplace = True)),
 		self.add_module('conv1', nn.Conv2d(in_channels = num_input_features, out_channels = bot_neck * growth_rate, kernel_size = 1, stride = 1, bias = False)),
-		self.add_module('norm1', nn.BatchNorm2d(num_features = bot_neck * growth_rate),
+		self.add_module('norm1', nn.BatchNorm2d(num_features = bot_neck * growth_rate)),
 		self.add_module('leaky_relu2', nn.LeakyReLU(inplace = True)),
 		self.add_module('conv2', nn.Conv2d(in_channels = bot_neck * growth_rate, out_channels = growth_rate, kernel_size = 3, stride = 1, padding = 1, bias = False)),
 		self.drop_rate = drop_rate
