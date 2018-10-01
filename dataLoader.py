@@ -15,11 +15,11 @@ class DIV2KDataset(Dataset):
 		self.mode = mode
 		# NOTE: This takes care only the downscaling 2 dataset.
 		if self.mode is "train":
-			self.data_dir = os.path.join(self.data_root, "DIV2K_train_LR4_bicubic")
-			self.label_dir = os.path.join(self.data_root, "DIV2K_train_LR2_bicubic")
+			self.data_dir = os.path.join(self.data_root, "DIV2K_train_LR_bicubic")
+			self.label_dir = os.path.join(self.data_root, "DIV2K_train_LR_bicubic")
 		elif self.mode is "validation":
-			self.data_dir = os.path.join(self.data_root, "DIV2K_valid_LR4_bicubic")
-			self.label_dir = os.path.join(self.data_root, "DIV2K_valid_LR2_bicubic")
+			self.data_dir = os.path.join(self.data_root, "DIV2K_valid_LR_bicubic")
+			self.label_dir = os.path.join(self.data_root, "DIV2K_valid_LR_bicubic")
 
 	def __len__(self):
 		return len(self.file_list_idx)
@@ -67,4 +67,3 @@ def DIV2K_TrainData(**kwargs):
 def DIV2K_ValidData(**kwargs):
 	data_set = DIV2KDataset(file_list, transform = data_transforms, mode = "validation")
 	return data_set
-
