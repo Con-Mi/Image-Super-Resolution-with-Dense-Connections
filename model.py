@@ -79,7 +79,7 @@ class SRDenseNetwork(nn.Module):
 			num_features = num_features + num_layers * growth_rate
 		
 		# Final Normalization
-		self.features.add_module('g_norm_f', nn.GroupNorm(num_groups = num_features // (growth_rate * bot_necks), num_channels = num_features))
+		self.features.add_module('g_norm_f', nn.GroupNorm(num_groups = num_features // (growth_rate * bot_neck), num_channels = num_features))
 
 		# Upsample
 		self.upsample_sr = nn.PixelShuffle(upscale_factor)
