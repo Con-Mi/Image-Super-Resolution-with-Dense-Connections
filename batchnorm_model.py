@@ -93,6 +93,6 @@ class SRDenseNetwork(nn.Module):
 
 def densenetSR(**kwargs):
 	
-	model = SRDenseNetwork(growth_rate = 32, block_config = (3, 6, 12, 8), num_init_features = 64, bot_neck = 4, drop_rate = 0, upscale_factor = 2)
+	model = SRDenseNetwork(growth_rate = 16, block_config = (3, 6, 12, 8), num_init_features = 64, bot_neck = 2, drop_rate = 0, upscale_factor = 2)
 
 	return model
