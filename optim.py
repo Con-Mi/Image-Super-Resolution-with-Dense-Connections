@@ -13,6 +13,7 @@ use_cuda = torch.cuda.is_available()
 batch_size = 1
 nr_epochs = 20
 learning_rate = 0.001
+running_loss = 0.0
 
 SRmodel = densenetSR()
 if use_cuda:
