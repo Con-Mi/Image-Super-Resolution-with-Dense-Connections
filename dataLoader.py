@@ -9,7 +9,7 @@ from PIL import Image
 
 class DIV2KDataset(Dataset):
 	def __init__(self, file_list_idx, transform = None, mode = "train"):
-		self.data_root = "../DIV2K"
+		self.data_root = "./"
 		self.file_list_idx = file_list_idx
 		self.transform = transform
 		self.mode = mode
