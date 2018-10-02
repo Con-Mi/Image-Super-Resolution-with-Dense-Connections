@@ -55,15 +55,13 @@ class DIV2KDataset(Dataset):
 			return image, label
 
 file_list = pd.read_csv("train_data_index.csv")
-data_transforms = transforms.Compose([transforms.ToTensor()])
-# data_set = DIV2KDataset(file_list, transform = data_transforms)
-
-#print(data_set)
 
 def DIV2K_TrainData(**kwargs):
+	data_transforms = transforms.Compose([transforms.ToTensor()])
 	data_set = DIV2KDataset(file_list, transform = data_transforms)
 	return data_set
 
 def DIV2K_ValidData(**kwargs):
+	data_transforms = transforms.Compose([transforms.ToTensor()])
 	data_set = DIV2KDataset(file_list, transform = data_transforms, mode = "validation")
 	return data_set
