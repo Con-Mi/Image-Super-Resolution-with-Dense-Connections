@@ -2,10 +2,12 @@
 
 from torch.utils.data import DataLoader
 from torch.utils.data.dataset import Dataset
+from torchvision import utils
 from torchvision import transforms
 import os
 import pandas as pd
 from PIL import Image
+import numpy as np
 
 class DIV2KDataset(Dataset):
 	def __init__(self, file_list_idx, transform = None, mode = "train"):
@@ -54,14 +56,19 @@ class DIV2KDataset(Dataset):
 				label = self.transform(label)
 			return image, label
 
-file_list = pd.read_csv("train_data_index.csv")
+def DIV2K_AugmentTrainData(data_transforms = None):
+	file_list = pd.read_csv("train_data_index.csv")
+	data_set = DIV2KDataset(file_list, transform = data_transforms)
+	return data_set
 
 def DIV2K_TrainData(**kwargs):
+	file_list = pd.read_csv("train_data_index.csv")
 	data_transforms = transforms.Compose([transforms.ToTensor()])
 	data_set = DIV2KDataset(file_list, transform = data_transforms)
 	return data_set
 
 def DIV2K_ValidData(**kwargs):
+	file_list = pd.read_csv("train_data_index.csv")
 	data_transforms = transforms.Compose([transforms.ToTensor()])
 	data_set = DIV2KDataset(file_list, transform = data_transforms, mode = "validation")
 	return data_set
