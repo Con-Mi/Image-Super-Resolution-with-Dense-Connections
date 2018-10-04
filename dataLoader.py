@@ -62,13 +62,13 @@ def DIV2K_AugmentTrainData(data_transforms = None):
 	return data_set
 
 def DIV2K_TrainData(**kwargs):
-	file_list = pd.read_csv("train_data_index.csv")
+	file_list = pd.read_csv("train_data_index_x4.csv")
 	data_transforms = transforms.Compose([transforms.ToTensor()])
 	data_set = DIV2KDataset(file_list, transform = data_transforms)
 	return data_set
 
 def DIV2K_ValidData(**kwargs):
-	file_list = pd.read_csv("train_data_index.csv")
+	file_list = pd.read_csv("train_data_index_x4.csv")
 	data_transforms = transforms.Compose([transforms.ToTensor()])
 	data_set = DIV2KDataset(file_list, transform = data_transforms, mode = "validation")
 	return data_set

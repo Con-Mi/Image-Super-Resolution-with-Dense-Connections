@@ -18,5 +18,5 @@ for i, transform_choice in enumerate(transforms_list):
 
         for i_idx, sample in enumerate(train_dataloader):
                 img_input, label_img = sample
-                # NOTE: Fix the directories || utils.save_image(img_input, "./DIV2K_train_LR4_bicubic/" + str("%04d" % (i_idx + (801 * (i+1)))) + "x4" + ".png", nrow=0, padding=0)
-                # NOTE: Fix the directories || utils.save_image(label_img, "./DIV2K_train_LR4_bicubic/" + str("%04d" % (i_idx + (801 * (i+1)))) + "x4" + ".png", nrow=0, padding=0)
+                utils.save_image(img_input, "./DIV2K_train_LR_bicubic/X4" + str("%04d" % (i_idx + (801 * (i+1)))) + "x4" + ".png", nrow=0, padding=0)
+                utils.save_image(label_img, "./DIV2K_train_LR_bicubic/X2" + str("%04d" % (i_idx + (801 * (i+1)))) + "x2" + ".png", nrow=0, padding=0)
