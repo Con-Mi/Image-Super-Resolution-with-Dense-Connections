@@ -35,8 +35,8 @@ class DIV2KDataset(Dataset):
 		if self.mode is "train":
 			self.image_folder = os.path.join(self.data_dir, "X4")
 			self.label_folder = os.path.join(self.label_dir, "X2")
-			self.image_path = os.path.join(self.image_folder, str("%04d" % file_id) + "x4" + ".png")
-			self.label_path = os.path.join(self.label_folder, str("%04d" % file_id) + "x2" + ".png")
+			self.image_path = os.path.join(self.image_folder, str(file_id))
+			self.label_path = os.path.join(self.label_folder, str(file_id))
 			image = Image.open(self.image_path)
 			label = Image.open(self.label_path)
 			if self.transform is not None:
@@ -46,9 +46,9 @@ class DIV2KDataset(Dataset):
 
 		elif self.mode is "validation":
 			self.image_folder = os.path.join(self.data_dir, "X4")
-			self.image_path = os.path.join(self.image_folder, str("%04d" % file_id) + "x4" + ".png") # Need to get images in the {0001, 0010, ..} format
+			self.image_path = os.path.join(self.image_folder, str(file_id)) # Need to get images in the {0001, 0010, ..} format
 			self.label_folder = os.path.join(self.label_dir, "X2")
-			self.label_path = os.path.join(self.label_folder, str("%04d" % file_id) + "x2" + ".png")
+			self.label_path = os.path.join(self.label_folder, str(file_id))
 			image = Image.open(self.image_path)
 			label = Image.open(self.label_path)
 			if self.transform is not None:
