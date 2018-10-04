@@ -10,9 +10,10 @@ from PIL import Image
 import numpy as np
 
 class DIV2KDataset(Dataset):
-	def __init__(self, file_list_idx, transform = None, mode = "train"):
+	def __init__(self, file_list_idx, file_list_label_idx, transform = None, mode = "train"):
 		self.data_root = "./"
 		self.file_list_idx = file_list_idx
+		self.file_list_label_idx = file_list_label_idx
 		self.transform = transform
 		self.mode = mode
 		# NOTE: This takes care only the downscaling 2 dataset.
@@ -30,13 +31,14 @@ class DIV2KDataset(Dataset):
 		if index not in range(len(self.file_list_idx)):
 			return self.__getitem__(np.random.randint(0, self.__len__()))
 		
-		file_id = self.file_list_idx["ids"].iloc[index]
+		file_id_image = self.file_list_idx["ids"].iloc[index]
+		file_id_label = self.file_list_label_idx["ids"].iloc[index] # Make sure that it selects the correct one as above
 
 		if self.mode is "train":
 			self.image_folder = os.path.join(self.data_dir, "X4")
 			self.label_folder = os.path.join(self.label_dir, "X2")
-			self.image_path = os.path.join(self.image_folder, file_id)
-			self.label_path = os.path.join(self.label_folder, file_id)
+			self.image_path = os.path.join(self.image_folder, file_id_image)
+			self.label_path = os.path.join(self.label_folder, file_id_label)
 			image = Image.open(self.image_path)
 			label = Image.open(self.label_path)
 			if self.transform is not None:
@@ -46,9 +48,9 @@ class DIV2KDataset(Dataset):
 
 		elif self.mode is "validation":
 			self.image_folder = os.path.join(self.data_dir, "X4")
-			self.image_path = os.path.join(self.image_folder, str(file_id)) # Need to get images in the {0001, 0010, ..} format
+			self.image_path = os.path.join(self.image_folder, file_id_image) # Need to get images in the {0001, 0010, ..} format
 			self.label_folder = os.path.join(self.label_dir, "X2")
-			self.label_path = os.path.join(self.label_folder, str(file_id))
+			self.label_path = os.path.join(self.label_folder, file_id_label)
 			image = Image.open(self.image_path)
 			label = Image.open(self.label_path)
 			if self.transform is not None:
@@ -63,12 +65,15 @@ def DIV2K_AugmentTrainData(data_transforms = None):
 
 def DIV2K_TrainData(**kwargs):
 	file_list = pd.read_csv("train_data_index_x4.csv")
+	file_list_labels = pd.read_csv("train_data_index_x2.csv")
 	data_transforms = transforms.Compose([transforms.ToTensor()])
-	data_set = DIV2KDataset(file_list, transform = data_transforms)
+	data_set = DIV2KDataset(file_list, file_list_labels, transform = data_transforms)
 	return data_set
 
+# TODO: FIX THIS BECAUSE VALIDATION ARE JUST A HUNDRED IMAGES. WRONG CSV FILE LOADED
 def DIV2K_ValidData(**kwargs):
 	file_list = pd.read_csv("train_data_index_x4.csv")
+	file_list_labels = pd.read_csv("train_data_index_x2.csv")
 	data_transforms = transforms.Compose([transforms.ToTensor()])
-	data_set = DIV2KDataset(file_list, transform = data_transforms, mode = "validation")
+	data_set = DIV2KDataset(file_list, file_list_labels, transform = data_transforms, mode = "validation")
 	return data_set
