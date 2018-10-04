@@ -30,13 +30,13 @@ class DIV2KDataset(Dataset):
 		if index not in range(len(self.file_list_idx)):
 			return self.__getitem__(np.random.randint(0, self.__len__()))
 		
-		file_id = self.file_list_idx.iloc[index]
+		file_id = self.file_list_idx["ids"].iloc[index]
 
 		if self.mode is "train":
 			self.image_folder = os.path.join(self.data_dir, "X4")
 			self.label_folder = os.path.join(self.label_dir, "X2")
-			self.image_path = os.path.join(self.image_folder, str(file_id))
-			self.label_path = os.path.join(self.label_folder, str(file_id))
+			self.image_path = os.path.join(self.image_folder, file_id)
+			self.label_path = os.path.join(self.label_folder, file_id)
 			image = Image.open(self.image_path)
 			label = Image.open(self.label_path)
 			if self.transform is not None:
