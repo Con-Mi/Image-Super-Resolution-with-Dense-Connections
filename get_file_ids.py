@@ -19,3 +19,4 @@ df.to_csv("train_data_index_x2.csv", index = False)
 a = list_ids_x4
 b = list_ids_x2
 differences_list = [i for i, j in zip(a, b) if i == j]
+print(differences_list)
