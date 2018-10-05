@@ -32,7 +32,7 @@ class DIV2KDataset(Dataset):
 			return self.__getitem__(np.random.randint(0, self.__len__()))
 		
 		file_id_image = self.file_list_idx["ids"].iloc[index]
-		file_id_label = self.file_list_label_idx["ids"].iloc[index] # Make sure that it selects the correct one as above
+		file_id_label = self.file_list_label_idx["ids"].iloc[index]
 
 		if self.mode is "train":
 			self.image_folder = os.path.join(self.data_dir, "X4")
