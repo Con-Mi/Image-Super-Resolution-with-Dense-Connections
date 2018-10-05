@@ -14,5 +14,5 @@ df.to_csv("train_data_index_x4.csv", index = False)
 list_ids_x2 = [f for f in listdir("./DIV2K_train_LR_bicubic/X2")]
 list_ids_x2 = sorted(list_ids_x2)
 dict_list_x2 = {"ids": list_ids_x2}
-df = pd.DataFrame(dict_list_x4)
+df = pd.DataFrame(dict_list_x2)
 df.to_csv("train_data_index_x2.csv", index = False)
