@@ -11,7 +11,7 @@ use_cuda = torch.cuda.is_available()
 
 # Hyperparameters
 batch_size = 1
-nr_epochs = 20
+nr_epochs = 10
 learning_rate = 0.001
 running_loss = 0.0
 
@@ -52,3 +52,8 @@ for epoch in range(nr_epochs):
                     (epoch + 1, i + 1, running_loss / 200))
             running_loss = 0.0
 
+torch.save(SRmodel.state_dict(), "SRmodel.pt")
+# Load model
+model.load_state_dict(torch.load("SRmodel.pt"))
+model.eval()
+ 
