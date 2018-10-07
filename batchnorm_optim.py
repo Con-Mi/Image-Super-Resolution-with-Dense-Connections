@@ -70,6 +70,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs=10, sc
                         loss.backward()
                         optimizer.step()
                 running_loss += loss.item() * input_img.size(0)
+                print(running_loss)
                 #running_corrects += torch.sum(preds == labels.data)
 
             epoch_loss = running_loss / len(dataloaders[phase])     # Different uses for this (len(dataloaders[phase].dataset)) 
