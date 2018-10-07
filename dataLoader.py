@@ -67,7 +67,9 @@ def DIV2K_TrainData(**kwargs):
 	file_list = pd.read_csv("train_data_index_x4.csv")
 	file_list_labels = pd.read_csv("train_data_index_x2.csv")
 	data_transforms = transforms.Compose([transforms.ToTensor()])
-	data_set = DIV2KDataset(file_list, file_list_labels, transform = data_transforms)
+	normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                 std=[0.229, 0.224, 0.225])
+	data_set = DIV2KDataset(file_list, file_list_labels, transform = transforms.Compose([data_transforms, normalize]))
 	return data_set
 
 # TODO: FIX THIS BECAUSE VALIDATION ARE JUST A HUNDRED IMAGES. WRONG CSV FILE LOADED
