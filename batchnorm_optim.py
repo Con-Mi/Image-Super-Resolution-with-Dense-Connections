@@ -14,6 +14,8 @@ batch_size = 1
 nr_epochs = 10
 learning_rate = 0.001
 running_loss = 0.0
+gamma = 0.1
+milestones = [1, 3, 5, 7, 9]
 
 SRmodel = densenetSR()
 if use_cuda:
@@ -30,12 +32,16 @@ valid_dataloader = DataLoader(valid_data_set, batch_size = 1, shuffle = True, nu
 # Optimization
 optimizer = optim.ASGD(SRmodel.parameters(), lr = learning_rate)
 criterion = nn.SmoothL1Loss()
+scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones, gamma = gamma)
 
 for epoch in range(nr_epochs):
     for i, sample in enumerate(train_dataloader):
         inputs, labels = sample
         inputs, labels = inputs.cuda(), labels.cuda()
-
+        
+        # Scheduler
+        scheduler.step()
+        
         # Zero parameter Gradients
         optimizer.zero_grad()
 
@@ -47,13 +53,13 @@ for epoch in range(nr_epochs):
 
         # Print data
         running_loss += loss.item()
-        if i % 200 == 199:
+        if i % 1000 == 999:
             print('[%d, %5d] loss: %.6f' %
                     (epoch + 1, i + 1, running_loss / 200))
             running_loss = 0.0
 
 torch.save(SRmodel.state_dict(), "SRmodel.pt")
 # Load model
-model.load_state_dict(torch.load("SRmodel.pt"))
-model.eval()
+# model.load_state_dict(torch.load("SRmodel.pt"))
+# model.eval()
  
