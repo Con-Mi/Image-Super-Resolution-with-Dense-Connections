@@ -13,7 +13,8 @@ use_cuda = torch.cuda.is_available()
 
 # Hyperparameters
 batch_size = 1
-nr_epochs = 2
+nr_epochs = 10
+momentum = 0.93
 learning_rate = 0.001
 running_loss = 0.0
 gamma = 0.1
@@ -32,7 +33,7 @@ valid_data_set = DIV2K_ValidData()
 valid_dataloader = DataLoader(valid_data_set, batch_size = 1, shuffle = True, num_workers = 6)
 
 # Optimization
-optimizer = optim.ASGD(SRmodel.parameters(), lr = learning_rate)
+optimizer = optim.SGD(SRmodel.parameters(), lr = learning_rate, momentum = momentum)
 criterion = nn.SmoothL1Loss()
 scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones, gamma = gamma)
 
@@ -109,3 +110,4 @@ def load_model(cust_model, model_dir = "./SRmodel.pt"):
 print("Start Training for 2 epochs: ")
 print("*"*15)
 SRmodel, validation_acc = train_model(SRmodel, dataloaders_dict, criterion, optimizer, nr_epochs, scheduler)
+save_model(SRmodel, name = "SRmodel_selu.pt")
