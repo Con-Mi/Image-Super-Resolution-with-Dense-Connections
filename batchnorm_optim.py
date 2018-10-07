@@ -39,9 +39,6 @@ for epoch in range(nr_epochs):
         inputs, labels = sample
         inputs, labels = inputs.cuda(), labels.cuda()
         
-        # Scheduler
-        scheduler.step()
-        
         # Zero parameter Gradients
         optimizer.zero_grad()
 
@@ -57,6 +54,8 @@ for epoch in range(nr_epochs):
             print('[%d, %5d] loss: %.6f' %
                     (epoch + 1, i + 1, running_loss / 200))
             running_loss = 0.0
+    # Scheduler
+    scheduler.step()
 
 torch.save(SRmodel.state_dict(), "SRmodel.pt")
 # Load model
