@@ -69,7 +69,7 @@ def DIV2K_TrainData(**kwargs):
 	data_transforms = transforms.Compose([transforms.ToTensor()])
 	normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                  std=[0.229, 0.224, 0.225])
-	data_set = DIV2KDataset(file_list, file_list_labels, transform = transforms.Compose([data_transforms, normalize]))
+	data_set = DIV2KDataset(file_list, file_list_labels, transform = data_transforms)
 	return data_set
 
 def DIV2K_ValidData(**kwargs):
