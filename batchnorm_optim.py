@@ -70,10 +70,11 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs=10, sc
                         loss.backward()
                         optimizer.step()
                 running_loss += loss.item() * input_img.size(0)
-                running_corrects += torch.sum(preds == labels.data)
+                #running_corrects += torch.sum(preds == labels.data)
 
             epoch_loss = running_loss / len(dataloaders[phase])     # Different uses for this (len(dataloaders[phase].dataset)) 
-            epoch_acc = running_corrects.double() / len(dataloaders[phase])
+            # epoch_acc = running_corrects.double() / len(dataloaders[phase])
+            epoch_acc = 0.0
 
             print("{} Loss: {:.4f} Acc: {:.4f}".format(phase, epoch_loss, epoch_acc))
             if scheduler is not None and phase == "train":
@@ -81,10 +82,12 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs=10, sc
             
 
             if phase == 'valid' and epoch_acc > best_acc:
-                best_acc = epoch_acc
-                best_model_wts = copy.deepcopy(cust_model.state_dict)
+                # best_acc = epoch_acc
+                # best_model_wts = copy.deepcopy(cust_model.state_dict)
+                pass
             if phase == "valid":
-                val_acc_history.append(epoch_acc)
+                # val_acc_history.append(epoch_acc)
+                pass
         
         print()
     time_elapsed = time.time() - start_time
