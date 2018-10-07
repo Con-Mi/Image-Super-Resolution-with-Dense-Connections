@@ -18,7 +18,7 @@ df = pd.DataFrame(dict_list_x2)
 df.to_csv("train_data_index_x2.csv", index = False)
 
 # ____________ Get the data indexes for the VALIDATION data ____________
-list_ids_x4 = [f for f in listdir("./DIV2K_vallid_LR_bicubic/X4")]
+list_ids_x4 = [f for f in listdir("./DIV2K_valid_LR_bicubic/X4")]
 list_ids_x4 = sorted(list_ids_x4)
 dict_list_x4 = {"ids": list_ids_x4}
 df = pd.DataFrame(dict_list_x4)
