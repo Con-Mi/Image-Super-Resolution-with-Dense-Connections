@@ -8,10 +8,10 @@ class _DenseLayer(nn.Sequential):
 	def __init__(self, num_input_features, growth_rate, bot_neck, drop_rate):
 		super(_DenseLayer, self).__init__()
 		self.add_module('g_norm1', nn.GroupNorm(num_groups = num_input_features // ((bot_neck * growth_rate) // 2), num_channels = num_input_features)), 
-		self.add_module('leaky_relu1', nn.LeakyReLU(inplace = True)),
+		self.add_module('leaky_relu1', nn.SELU(inplace = True)),
 		self.add_module('conv1', nn.Conv2d(in_channels = num_input_features, out_channels = bot_neck * growth_rate, kernel_size = 1, stride = 1, bias = False)),
 		self.add_module('g_norm2', nn.GroupNorm(num_groups = (bot_neck * growth_rate) // 2, num_channels = bot_neck * growth_rate)),
-		self.add_module('leaky_relu2', nn.LeakyReLU(inplace = True)),
+		self.add_module('leaky_relu2', nn.SELU(inplace = True)),
 		self.add_module('conv2', nn.Conv2d(in_channels = bot_neck * growth_rate, out_channels = growth_rate, kernel_size = 3, stride = 1, padding = 1, bias = False)),
 		self.drop_rate = drop_rate
 
@@ -39,7 +39,7 @@ class _TransitionLayer(nn.Sequential):
 		self.add_module('avg_pool', nn.AvgPool2d(kernel_size = 2, stride = 2))
 """
 
-class _UpsampleBlock(nn.Module):
+class _UpsampleBlock(nn.Sequential):
 	""" Designed following input from paper and 
     	link https://distill.pub/2016/deconv-checkerboard/
     """
@@ -50,10 +50,10 @@ class _UpsampleBlock(nn.Module):
 			nn.functional.interpolate(scale_factor = 2, mode = 'nearest'),
 			nn.Conv2d(in_channels = in_channels, out_channels = middle_channels, kernel_size = 3, padding = 1),
 			nn.GroupNorm(num_gourps = middle_channels // 2, num_channels = middle_channels),
-			nn.LeakyReLU(inplace = True),
+			nn.SELU(inplace = True),
 			nn.Conv2d(in_channels = middle_channels, out_channels = out_channels, kernel_size = 3, padding = 1),
 			nn.GroupNorm(num_gourps = out_channels // 2, num_channels = out_channels),
-			nn.LeakyReLU(inplace = True)
+			nn.SELU(inplace = True)
 		)
 
 	def forward(self, x):
@@ -67,7 +67,7 @@ class SRDenseNetwork(nn.Module):
 		self.features = nn.Sequential(OrderedDict([
 			('conv0', nn.Conv2d(in_channels = 3, out_channels = num_init_features, kernel_size = 7, stride = 1, padding = 3, bias = False)),
 			('g_norm0', nn.GroupNorm(num_groups = num_init_features // (growth_rate // 2) , num_channels = num_init_features)),
-			('leaky_relu1', nn.LeakyReLU(inplace = True)),
+			('leaky_relu1', nn.SELU(inplace = True)),
 			('avg_pool0', nn.AvgPool2d(kernel_size = 3, stride = 1, padding = 1)),
 		]))
 
@@ -86,7 +86,7 @@ class SRDenseNetwork(nn.Module):
 
 	def forward(self, x):
 		features = self.features(x)
-		out = F.leaky_relu(features, inplace = True)
+		out = F.selu(features, inplace = True)
 		out = self.upsample_sr(out)
 		return out
 

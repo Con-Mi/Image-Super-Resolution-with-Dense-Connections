@@ -48,7 +48,7 @@ class DIV2KDataset(Dataset):
 
 		elif self.mode is "validation":
 			self.image_folder = os.path.join(self.data_dir, "X4")
-			self.image_path = os.path.join(self.image_folder, file_id_image) # Need to get images in the {0001, 0010, ..} format
+			self.image_path = os.path.join(self.image_folder, file_id_image)
 			self.label_folder = os.path.join(self.label_dir, "X2")
 			self.label_path = os.path.join(self.label_folder, file_id_label)
 			image = Image.open(self.image_path)
@@ -72,10 +72,9 @@ def DIV2K_TrainData(**kwargs):
 	data_set = DIV2KDataset(file_list, file_list_labels, transform = transforms.Compose([data_transforms, normalize]))
 	return data_set
 
-# TODO: FIX THIS BECAUSE VALIDATION ARE JUST A HUNDRED IMAGES. WRONG CSV FILE LOADED
 def DIV2K_ValidData(**kwargs):
-	file_list = pd.read_csv("train_data_index_x4.csv")
-	file_list_labels = pd.read_csv("train_data_index_x2.csv")
+	file_list = pd.read_csv("valid_data_index_x4.csv")
+	file_list_labels = pd.read_csv("valid_data_index_x2.csv")
 	data_transforms = transforms.Compose([transforms.ToTensor()])
 	data_set = DIV2KDataset(file_list, file_list_labels, transform = data_transforms, mode = "validation")
 	return data_set
