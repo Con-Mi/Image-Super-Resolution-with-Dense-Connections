@@ -34,7 +34,7 @@ valid_dataloader = DataLoader(valid_data_set, batch_size = 1, shuffle = True, nu
 
 # Optimization
 optimizer = optim.SGD(SRmodel.parameters(), lr = learning_rate, momentum = momentum)
-criterion = nn.SmoothL1Loss()
+criterion = if use_cuda nn.SmoothL1Loss().cuda() else nn.SmoothL1Loss()
 scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones, gamma = gamma)
 
 dataloaders_dict = {"train": train_dataloader, "valid": valid_dataloader}
