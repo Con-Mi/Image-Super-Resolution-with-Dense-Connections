@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from pretrained_model import pretrained_densenetSR
+from dataLoader import DIV2K_TrainData, DIV2K_ValidData
 from torch.utils.data import DataLoader
 import time
 import copy
