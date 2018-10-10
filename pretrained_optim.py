@@ -109,4 +109,4 @@ def load_model(cust_model, model_dir = "./SRmodel.pt"):
 print("Start Training for 2 epochs: ")
 print("*"*15)
 SRmodel, validation_acc = train_model(SRmodel, dataloaders_dict, criterion, optimizer, nr_epochs, scheduler)
-save_model(SRmodel, name = "SRmodel_selu.pt")
+save_model(SRmodel, name = "SRmodel_pretrain.pt")
