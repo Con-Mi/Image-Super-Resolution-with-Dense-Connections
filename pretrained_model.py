@@ -8,13 +8,20 @@ class PretrainedDenseSRmodel(nn.Module):
         super(PretrainedDenseSRmodel, self).__init__()
         
         self.encoder = models.densenet121(pretrained  = pretrained).features
-        self.low_conv = self.encoder[0]
+        self.low_conv = nn.Conv2d(in_channels = 3, out_channels = 64, kernel_size = 7, stride = 1, padding = 3, bias = False)
         self.bn = self.encoder[1]
         self.relu = self.encoder[2]
         self.dense_layer1 = self.encoder[4]
+        self.bot_neck1 = nn.Conv2d(in_channels = 256, out_channels = 128, kernel_size = 1, stride = 1, bias = False)
+
         self.dense_layer2 = self.encoder[6]
+        self.bot_neck2 = nn.Conv2d(in_channels = 512, out_channels = 256, kernel_size = 1, stride = 1, bias = False)
+
         self.dense_layer3 = self.encoder[8]
+        self.bot_neck3 = nn.Conv2d(in_channels = 1024, out_channels = 512, kernel_size = 1, stride = 1, bias = False)
+
         self.dense_layer4 = self.encoder[10]
+        
         self.group_norm = nn.GroupNorm(num_groups = 1024 // 64, num_channels = 1024)
         self.bot_neck =  nn.Conv2d(in_channels = 1024, out_channels = 3*upscale_factor**2, kernel_size = 1, stride = 1, bias = False)
     
@@ -24,11 +31,20 @@ class PretrainedDenseSRmodel(nn.Module):
         out = self.low_conv(x)
         out = self.bn(out)
         out = self.relu(out)
+
         out = self.dense_layer1(out)
+        out = self.bot_neck1(out)
+
         out = self.dense_layer2(out)
+        out = self.bot_neck2(out)
+
         out = self.dense_layer3(out)
+        out = self.bot_neck3(out)
+
         out = self.dense_layer4(out)
+
         out = self.group_norm(out)
+        out = F.selu(out)
         out = self.bot_neck(out)
         out = F.selu(out)
         out = self.upsample_sr(out)
