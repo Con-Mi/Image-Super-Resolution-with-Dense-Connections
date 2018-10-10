@@ -20,10 +20,10 @@ class PretrainedDenseSRmodel(nn.Module):
         self.dense_layer3 = self.encoder[8]
         self.bot_neck3 = nn.Conv2d(in_channels = 1024, out_channels = 512, kernel_size = 1, stride = 1, bias = False)
 
-        self.dense_layer4 = self.encoder[10]
+        # self.dense_layer4 = self.encoder[10]
         
-        self.group_norm = nn.GroupNorm(num_groups = 1024 // 64, num_channels = 1024)
-        self.bot_neck =  nn.Conv2d(in_channels = 1024, out_channels = 3*upscale_factor**2, kernel_size = 1, stride = 1, bias = False)
+        self.group_norm = nn.GroupNorm(num_groups = 512 // 64, num_channels = 512)
+        self.bot_neck =  nn.Conv2d(in_channels = 512, out_channels = 3*upscale_factor**2, kernel_size = 1, stride = 1, bias = False)
     
         self.upsample_sr = nn.PixelShuffle(upscale_factor)
         
@@ -41,7 +41,7 @@ class PretrainedDenseSRmodel(nn.Module):
         out = self.dense_layer3(out)
         out = self.bot_neck3(out)
 
-        out = self.dense_layer4(out)
+        #out = self.dense_layer4(out)
 
         out = self.group_norm(out)
         out = F.selu(out)
