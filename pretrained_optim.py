@@ -1,10 +1,7 @@
-""" ============== Optimization ============ """
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from batchnorm_model import densenetSR
-from dataLoader import DIV2K_TrainData, DIV2K_ValidData
+from pretrained_model import pretrained_densenetSR
 from torch.utils.data import DataLoader
 import time
 import copy
@@ -20,7 +17,7 @@ running_loss = 0.0
 gamma = 0.1
 milestones = [1, 3, 5, 7, 9]
 
-SRmodel = densenetSR()
+SRmodel = pretrained_densenetSR(pretrained=True)
 if use_cuda:
     SRmodel = SRmodel.cuda()
 
