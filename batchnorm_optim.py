@@ -94,7 +94,8 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs=10, sc
     time_elapsed = time.time() - start_time
     print("Training complete in {:.0f}m {:.0f}s".format(time_elapsed // 60, time_elapsed % 60))
     print("Best validation Accuracy: {:4f}".format(best_acc))
-
+    
+    best_model_wts = copy.deepcopy(cust_model.state_dict())
     cust_model.load_state_dict(best_model_wts)
     return cust_model, val_acc_history
 
