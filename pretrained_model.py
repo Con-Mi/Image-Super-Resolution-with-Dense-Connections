@@ -8,6 +8,9 @@ class PretrainedDenseSRmodel(nn.Module):
         super(PretrainedDenseSRmodel, self).__init__()
         
         self.encoder = models.densenet121(pretrained  = pretrained).features
+        self.low_conv = self.encoder[0]
+        self.bn = self.encoder[1]
+        self.relu = self.encoder[2]
         self.dense_layer1 = self.encoder[4]
         self.dense_layer2 = self.encoder[6]
         self.dense_layer3 = self.encoder[8]
@@ -18,7 +21,10 @@ class PretrainedDenseSRmodel(nn.Module):
         self.upsample_sr = nn.PixelShuffle(upscale_factor)
         
     def forward(self, x):
-        out = self.dense_layer1(x)
+        out = self.low_conv(x)
+        out = self.bn(out)
+        out = self.relu(out)
+        out = self.dense_layer1(out)
         out = self.dense_layer2(out)
         out = self.dense_layer3(out)
         out = self.dense_layer4(out)
