@@ -28,11 +28,11 @@ if use_cuda:
 
 # Training Data and Dataloader
 train_data_set = DIV2K_TrainData()
-train_dataloader = DataLoader(train_data_set, batch_size = 1, shuffle = True, num_workers = 6)
+train_dataloader = DataLoader(train_data_set, batch_size = 1, shuffle = True, num_workers = 30)
 
 # Validation Data and Dataloader
 valid_data_set = DIV2K_ValidData()
-valid_dataloader = DataLoader(valid_data_set, batch_size = 1, shuffle = True, num_workers = 6)
+valid_dataloader = DataLoader(valid_data_set, batch_size = 1, shuffle = True, num_workers = 30)
 
 # Optimization
 optimizer = optim.SGD(SRmodel.parameters(), lr = learning_rate, momentum = momentum)
@@ -48,7 +48,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs=10, sc
     best_acc = 0.0
 
     for epoch in range(num_epochs):
-        print("Epoch {}/{}".format(epoch, num_epochs - 1))
+        print("Epoch {}/{}".format(epoch+1, num_epochs))
         print("_"*15)
         for phase in ["train", "valid"]:
             if phase == "train":
