@@ -17,7 +17,7 @@ use_cuda = torch.cuda.is_available()
 batch_size = 1
 nr_epochs = 10
 momentum = 0.93
-learning_rate = 0.001
+learning_rate = 0.01
 running_loss = 0.0
 gamma = 0.1
 milestones = [1, 3, 5, 7, 9]
@@ -75,7 +75,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs=10, sc
                 running_loss += loss.item() * input_img.size(0)
                 running_psnr += psnr
 
-            epoch_loss = running_loss / len(dataloaders[phase])     # Different uses for this (len(dataloaders[phase].dataset)) 
+            epoch_loss = running_loss / len(dataloaders[phase])
             epoch_acc = running_psnr / len(dataloaders[phase])
 
             print("{} Loss: {:.4f} Acc PSNR: {:.4f}".format(phase, epoch_loss, epoch_acc))
