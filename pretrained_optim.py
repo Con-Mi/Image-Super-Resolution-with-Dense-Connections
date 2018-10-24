@@ -1,12 +1,15 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from torch.utils.data import DataLoader
+
 from pretrained_model import pretrained_densenetSR
 from dataLoader import DIV2K_TrainData, DIV2K_ValidData
-from torch.utils.data import DataLoader
+
 import time
 import copy
 from math import log10
+from tqdm import tqdm
 
 use_cuda = torch.cuda.is_available()
 
@@ -55,7 +58,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs=10, sc
             running_loss = 0.0
             running_psnr = 0
 
-            for input_img, labels in dataloaders[phase]:
+            for input_img, labels in tqdm(dataloaders[phase], total=len(dataloaders[phase])):
                 input_img = input_img.cuda()
                 labels = labels.cuda()
 
@@ -73,7 +76,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs=10, sc
                 running_psnr += psnr
 
             epoch_loss = running_loss / len(dataloaders[phase])     # Different uses for this (len(dataloaders[phase].dataset)) 
-            epoch_acc = running_psnr.double() / len(dataloaders[phase])
+            epoch_acc = running_psnr / len(dataloaders[phase])
 
             print("{} Loss: {:.4f} Acc PSNR: {:.4f}".format(phase, epoch_loss, epoch_acc))
             if scheduler is not None and phase == "train":
@@ -83,10 +86,8 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs=10, sc
             if phase == 'valid' and epoch_acc > best_acc:
                 best_acc = epoch_acc
                 best_model_wts = copy.deepcopy(cust_model.state_dict)
-                pass
             if phase == "valid":
                 val_acc_history.append(epoch_acc)
-                pass
         
         print()
     time_elapsed = time.time() - start_time
