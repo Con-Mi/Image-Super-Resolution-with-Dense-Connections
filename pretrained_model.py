@@ -14,6 +14,7 @@ class BottleNeck(nn.Module):
         out = self.conv(x)
         out = self.gn(out)
         out = self.elu(out)
+        return out
 
 class PretrainedDenseSRmodel(nn.Module):
     def __init__(self, pretrained = False, upscale_factor = 2):
