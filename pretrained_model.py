@@ -60,7 +60,7 @@ class PretrainedDenseSRmodel(nn.Module):
         out = self.bot_neck(out)
         out = self.upsample_sr(out)
         """
-        return out.size()
+        return out
 
 def pretrained_densenetSR(pretrained = False, upscale_factor = 2):
 	model = PretrainedDenseSRmodel(pretrained = pretrained, upscale_factor=upscale_factor)
