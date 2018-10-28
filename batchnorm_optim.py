@@ -3,11 +3,14 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from torch.utils.data import DataLoader
+
 from batchnorm_model import densenetSR
 from dataLoader import DIV2K_TrainData, DIV2K_ValidData
-from torch.utils.data import DataLoader
+
 import time
 import copy
+from tqdm import tqdm
 
 use_cuda = torch.cuda.is_available()
 
@@ -15,7 +18,7 @@ use_cuda = torch.cuda.is_available()
 batch_size = 1
 nr_epochs = 10
 momentum = 0.93
-learning_rate = 0.001
+learning_rate = 0.01
 running_loss = 0.0
 gamma = 0.1
 milestones = [1, 3, 5, 7, 9]
@@ -26,11 +29,11 @@ if use_cuda:
 
 # Training Data and Dataloader
 train_data_set = DIV2K_TrainData()
-train_dataloader = DataLoader(train_data_set, batch_size = 1, shuffle = True, num_workers = 6)
+train_dataloader = DataLoader(train_data_set, batch_size = 1, shuffle = True, num_workers = 20)
 
 # Validation Data and Dataloader
 valid_data_set = DIV2K_ValidData()
-valid_dataloader = DataLoader(valid_data_set, batch_size = 1, shuffle = True, num_workers = 6)
+valid_dataloader = DataLoader(valid_data_set, batch_size = 1, shuffle = True, num_workers = 20)
 
 # Optimization
 optimizer = optim.SGD(SRmodel.parameters(), lr = learning_rate, momentum = momentum)
@@ -56,7 +59,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs=10, sc
             running_loss = 0.0
             running_corrects = 0
 
-            for input_img, labels in dataloaders[phase]:
+            for input_img, labels in tqdm(dataloaders[phase], total=len(dataloaders[phase])):
                 input_img = input_img.cuda()
                 labels = labels.cuda()
 

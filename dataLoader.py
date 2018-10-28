@@ -59,7 +59,7 @@ class DIV2KDataset(Dataset):
 			return image, label
 
 def DIV2K_AugmentTrainData(data_transforms = None):
-	file_list = pd.read_csv("train_data_index.csv")
+	file_list = pd.read_csv("train_data_index_x2.csv")
 	data_set = DIV2KDataset(file_list, transform = data_transforms)
 	return data_set
 

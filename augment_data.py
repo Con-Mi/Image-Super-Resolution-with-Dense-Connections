@@ -5,6 +5,7 @@ from dataLoader import DIV2K_TrainData, DIV2K_ValidData, DIV2K_AugmentTrainData
 from torch.utils.data import DataLoader
 from torchvision import utils
 from torchvision import transforms
+from tqdm import tqdm
 
 transforms_list = [ transforms.RandomHorizontalFlip(p=1.0), transforms.RandomVerticalFlip(p = 1.0), 
                     transforms.RandomRotation(205), transforms.RandomRotation(45), transforms.RandomRotation(145), 
@@ -12,7 +13,7 @@ transforms_list = [ transforms.RandomHorizontalFlip(p=1.0), transforms.RandomVer
                     transforms.ColorJitter(saturation=1.2), transforms.ColorJitter(saturation=0.7), transforms.ColorJitter(hue=0.3),
                     transforms.ColorJitter(hue=0.1) ]
 
-for i, transform_choice in enumerate(transforms_list):
+for i, transform_choice in tqdm(enumerate(transforms_list), total=len(transforms_list)):
         train_data_set = DIV2K_AugmentTrainData(data_transforms = transforms.Compose([transform_choice, transforms.ToTensor()]))
         train_dataloader = DataLoader(train_data_set, batch_size = 1, shuffle = True, num_workers = 7)
 
