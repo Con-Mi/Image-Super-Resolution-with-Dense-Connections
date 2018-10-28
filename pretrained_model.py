@@ -37,7 +37,7 @@ class PretrainedDenseSRmodel(nn.Module):
         self.dense_layer4 = encoder[10]
         
         self.group_norm = nn.GroupNorm(num_groups = 16, num_channels = 1024)
-        self.bot_neck = BottleNeck(in_chnl=256, out_chnl=3*upscale_factor**2)
+        self.bot_neck = BottleNeck(in_chnl=1024, out_chnl=3*upscale_factor**2)
         self.upsample_sr = nn.PixelShuffle(upscale_factor)
         
     def forward(self, x):
