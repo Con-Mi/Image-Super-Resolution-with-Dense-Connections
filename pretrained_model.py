@@ -47,7 +47,7 @@ class PretrainedDenseSRmodel(nn.Module):
 
         out = self.dense_layer1(out)
         out = self.bot_neck1(out)
-        """
+
         out = self.dense_layer2(out)
         out = self.bot_neck2(out)
 
@@ -60,7 +60,7 @@ class PretrainedDenseSRmodel(nn.Module):
         out = F.elu(out)
         out = self.bot_neck(out)
         out = self.upsample_sr(out)
-        """
+        
         return out
 
 def pretrained_densenetSR(pretrained = False, upscale_factor = 2):
