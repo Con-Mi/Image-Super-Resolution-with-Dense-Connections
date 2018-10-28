@@ -29,11 +29,11 @@ SRmodel = nn.DataParallel(SRmodel)
 
 # Training Data and Dataloader
 train_data_set = DIV2K_TrainData()
-train_dataloader = DataLoader(train_data_set, batch_size = 1, shuffle = True, num_workers = 30)
+train_dataloader = DataLoader(train_data_set, batch_size = 1, shuffle = True, num_workers = 10)
 
 # Validation Data and Dataloader
 valid_data_set = DIV2K_ValidData()
-valid_dataloader = DataLoader(valid_data_set, batch_size = 1, shuffle = True, num_workers = 30)
+valid_dataloader = DataLoader(valid_data_set, batch_size = 1, shuffle = True, num_workers = 10)
 
 # Optimization
 optimizer = optim.SGD(SRmodel.parameters(), lr = learning_rate, momentum = momentum)
