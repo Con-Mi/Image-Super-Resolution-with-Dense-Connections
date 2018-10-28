@@ -28,7 +28,7 @@ class PretrainedDenseSRmodel(nn.Module):
         self.bot_neck1 = BottleNeck(in_chnl=256, out_chnl=128)
         
         self.dense_layer2 = self.encoder[6]
-        self.bot_neck2 = BottleNeck(in_chnl=512, out_chnl=128)
+        self.bot_neck2 = BottleNeck(in_chnl=512, out_chnl=256)
         
         self.dense_layer3 = self.encoder[8]
         self.bot_neck3 = BottleNeck(in_chnl=1024, out_chnl=512)
