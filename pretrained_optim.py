@@ -25,6 +25,7 @@ milestones = [1, 3, 5, 7, 9]
 SRmodel = pretrained_densenetSR(pretrained=True)
 if use_cuda:
     SRmodel = SRmodel.cuda()
+SRmodel = nn.DataParallel(SRmodel)
 
 # Training Data and Dataloader
 train_data_set = DIV2K_TrainData()
