@@ -6,6 +6,7 @@ from torch import nn
 
 class BottleNeck(nn.Module):
     def __init__(self, in_chnl, out_chnl):
+        super(BottleNeck, self).__init__()
         self.conv = nn.Conv2d(in_channels=in_chnl, out_channels=out_chnl, kernel_size=3, stride=1, padding=1, bias=False)
         self.gn = nn.GroupNorm(num_groups=16, num_channels=out_chnl)
         self.elu = nn.ELU(inplace=True)
