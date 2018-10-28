@@ -19,21 +19,21 @@ class PretrainedDenseSRmodel(nn.Module):
     def __init__(self, pretrained = False, upscale_factor = 2):
         super(PretrainedDenseSRmodel, self).__init__()
         
-        self.encoder = models.densenet121(pretrained  = pretrained).features
+        encoder = models.densenet121(pretrained  = pretrained).features
         self.low_conv = nn.Conv2d(in_channels = 3, out_channels = 64, kernel_size = 7, stride = 1, padding = 3, bias = False)
         self.gn = nn.GroupNorm(num_groups=16, num_channels=64)
         self.elu = nn.ELU(inplace=True)
         
-        self.dense_layer1 = self.encoder[4]
+        self.dense_layer1 = encoder[4]
         self.bot_neck1 = BottleNeck(in_chnl=256, out_chnl=128)
         
-        self.dense_layer2 = self.encoder[6]
+        self.dense_layer2 = encoder[6]
         self.bot_neck2 = BottleNeck(in_chnl=512, out_chnl=256)
         
-        self.dense_layer3 = self.encoder[8]
+        self.dense_layer3 = encoder[8]
         self.bot_neck3 = BottleNeck(in_chnl=1024, out_chnl=512)
         
-        self.dense_layer4 = self.encoder[10]
+        self.dense_layer4 = encoder[10]
         
         self.group_norm = nn.GroupNorm(num_groups = 16, num_channels = 256)
         self.bot_neck = BottleNeck(in_chnl=256, out_chnl=3*upscale_factor**2)
